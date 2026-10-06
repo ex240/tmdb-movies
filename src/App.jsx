@@ -11,6 +11,7 @@ function App() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   const [sortBy, setSortBy] = useState('rating')
+  const [layout, setLayout] = useState('grid')
 
   useEffect(() => {
     async function loadMovies() {
@@ -71,8 +72,14 @@ function App() {
           <option value="year">Release Date</option>
           <option value="title">Title (A-Z)</option>
         </select>
+        <button
+          type="button"
+          onClick={() => setLayout(layout === 'grid' ? 'list' : 'grid')}
+        >
+          {layout === 'grid' ? 'List view' : 'Grid view'}
+        </button>
       </div>
-      <ul className="movie-grid">
+      <ul className={layout === 'grid' ? 'movie-grid' : 'movie-list'}>
         {sortedMovies.map((movie) => (
           <li key={movie.id} className="movie-card">
             {movie.poster_path ? (
