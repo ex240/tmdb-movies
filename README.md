@@ -32,13 +32,14 @@ free port. Also available: `npm test`, `npm run test:watch`, `npm run build`,
 | — one interactive element | Hover lift, plus a sort dropdown and a Grid/List control |
 
 Extras done: responsive grid, sorting UI, CSS transitions, alternate layout.
-Sizing by rating was skipped — it needs `grid-auto-flow: dense`, which reorders
-cards visually and would contradict the sort.
+Sizing by rating was skipped: in a grid, larger cards either leave gaps or, with
+dense packing, display out of sorted order.
 
 ## Key decisions
 
-**Filter — server-side.** `with_genres=878` means TMDB returns only the 20
-movies we display. The id is named `SCI_FI_GENRE_ID`, not inlined.
+**Filter — server-side.** `with_genres=878` means TMDB returns only science
+fiction, and we display the first page of 20. The id is named `SCI_FI_GENRE_ID`,
+not inlined.
 
 **Sort — client-side.** TMDB offers a `sort_by` parameter, but sorting in
 JavaScript lets the dropdown reorder the grid with no additional request:
@@ -70,7 +71,8 @@ modified directly. String fields use `localeCompare`; subtraction needs numbers.
 
 **Styling** is plain CSS; custom properties in `index.css` drive light and dark
 mode, and the Grid/List control swaps one container class, leaving cards
-unchanged.
+unchanged. The controls carry a `:focus-visible` outline for keyboard users; the
+cards themselves hold no focusable elements, so hover is their only state.
 
 ## API key
 
@@ -102,5 +104,3 @@ transition, and list layout still need checking in a real browser.
   in the response and is unused.
 - **A genre filter dropdown.** The genre is fixed; `/genre/movie/list` returns
   the full set to populate a control like the sort.
-- **Keyboard focus styles.** The hover lift has no `:focus-visible` equivalent,
-  so tabbing to a card or control shows no matching affordance.
