@@ -4,6 +4,7 @@ import './App.css'
 const API_KEY = '62df2cd3a4881de6558bc68cd67cca20'
 const SCI_FI_GENRE_ID = 878
 const DISCOVER_URL = `https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}&with_genres=${SCI_FI_GENRE_ID}`
+const POSTER_BASE_URL = 'https://image.tmdb.org/t/p/w500'
 
 function App() {
   const [movies, setMovies] = useState([])
@@ -52,15 +53,34 @@ function App() {
   return (
     <main>
       <h1>Sci-Fi Movies</h1>
-      <ul>
+      <ul className="movie-grid">
         {sortedMovies.map((movie) => (
-          <li key={movie.id}>
-            {movie.title} — {movie.vote_average.toFixed(1)}
+          <li key={movie.id} className="movie-card">
+            {movie.poster_path ? (
+              <img
+                className="poster"
+                src={`${POSTER_BASE_URL}${movie.poster_path}`}
+                alt={`Poster for ${movie.title}`}
+                loading="lazy"
+              />
+            ) : (
+              <div className="poster poster-missing">No poster</div>
+            )}
+            <h2 className="movie-title">{movie.title}</h2>
+            <p className="movie-meta">
+              <span>{movie.release_date ? movie.release_date.slice(0, 4) : '—'}</span>
+              <span>
+                {movie.vote_count === 0
+                  ? 'NR'
+                  : `★ ${movie.vote_average.toFixed(1)}`}
+              </span>
+            </p>
           </li>
         ))}
       </ul>
     </main>
-  )
+
+)
 }
 
 export default App
