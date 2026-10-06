@@ -65,10 +65,16 @@ alike, so no date parsing is needed.
 `release_date` arrives as a full date string (`"2014-11-05"`), so only the year
 is shown. `vote_average` arrives as a float (`7.915`) and is rounded for display.
 
-**Layout toggle.**
-A button switches the grid between a poster grid and a single-column list. The
-cards themselves are unchanged in either mode — only the class on the container
-changes, and the list rules override the grid ones by being more specific.
+**Layout control.**
+A two-button segmented control switches between a poster grid and a
+single-column list. Both options stay visible with the active one highlighted,
+rather than a single button that only names its destination, so the current
+layout is readable at a glance. `aria-pressed` carries that same state to
+assistive technology.
+
+The cards themselves are unchanged in either mode — only the class on the
+container changes, and the list rules override the grid ones by being more
+specific.
 
 **Interactive element — hover.**
 Cards lift with `transform: translateY(-4px)` and gain a shadow on hover. The
@@ -122,10 +128,11 @@ network tab regardless of how it is stored.
 npm test
 ```
 
-19 tests run against a fake DOM (jsdom) with `fetch` mocked, so they need no
+21 tests run against a fake DOM (jsdom) with `fetch` mocked, so they need no
 network and no browser. They cover the loading and error paths, the request
 URL, all three sort orders, the `NR` and missing-poster fallbacks, the layout
-toggle, and the fact that changing the sort does not refetch.
+control and its active state, and the fact that changing the sort does not
+refetch.
 
 They do not cover appearance — jsdom applies no CSS, so the grid, hover
 transition, and list layout still need checking in a real browser.

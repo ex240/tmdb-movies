@@ -217,14 +217,21 @@ describe('card contents', () => {
   })
 })
 
-describe('layout toggle', () => {
-  it('starts in grid layout', async () => {
+describe('layout control', () => {
+  it('starts in grid layout with Grid marked as the active option', async () => {
     mockFetchSuccess()
     render(<App />)
     await screen.findByText('Interstellar')
 
     expect(screen.getByRole('list')).toHaveClass('movie-grid')
-    expect(screen.getByRole('button', { name: 'List view' })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Grid' })).toHaveAttribute(
+      'aria-pressed',
+      'true',
+    )
+    expect(screen.getByRole('button', { name: 'List' })).toHaveAttribute(
+      'aria-pressed',
+      'false',
+    )
   })
 
   it('switches to list layout and back', async () => {
@@ -232,11 +239,33 @@ describe('layout toggle', () => {
     render(<App />)
     await screen.findByText('Interstellar')
 
-    await userEvent.click(screen.getByRole('button', { name: 'List view' }))
+    await userEvent.click(screen.getByRole('button', { name: 'List' }))
     expect(screen.getByRole('list')).toHaveClass('movie-list')
 
-    await userEvent.click(screen.getByRole('button', { name: 'Grid view' }))
+    await userEvent.click(screen.getByRole('button', { name: 'Grid' }))
     expect(screen.getByRole('list')).toHaveClass('movie-grid')
+  })
+
+  it('moves the active state to whichever option is selected', async () => {
+    mockFetchSuccess()
+    render(<App />)
+    await screen.findByText('Interstellar')
+
+    await userEvent.click(screen.getByRole('button', { name: 'List' }))
+
+    expect(screen.getByRole('button', { name: 'List' })).toHaveClass('active')
+    expect(screen.getByRole('button', { name: 'Grid' })).not.toHaveClass('active')
+  })
+
+  it('stays in list layout when List is clicked twice', async () => {
+    mockFetchSuccess()
+    render(<App />)
+    await screen.findByText('Interstellar')
+
+    await userEvent.click(screen.getByRole('button', { name: 'List' }))
+    await userEvent.click(screen.getByRole('button', { name: 'List' }))
+
+    expect(screen.getByRole('list')).toHaveClass('movie-list')
   })
 
   it('keeps the chosen sort when the layout changes', async () => {
@@ -245,7 +274,7 @@ describe('layout toggle', () => {
     await screen.findByText('Interstellar')
 
     await userEvent.selectOptions(screen.getByLabelText(/sort by/i), 'title')
-    await userEvent.click(screen.getByRole('button', { name: 'List view' }))
+    await userEvent.click(screen.getByRole('button', { name: 'List' }))
 
     expect(renderedTitles()).toEqual([
       'Avengers: Doomsday',

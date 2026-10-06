@@ -57,12 +57,15 @@ main {
   margin: auto 10px 10px;
 }
 
-.sort-control {
+.controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
   margin-bottom: 20px;
   font-size: 14px;
 }
 
-.sort-control select {
+.controls select {
   font: inherit;
   padding: 4px 8px;
   color: var(--text-h);
@@ -71,15 +74,35 @@ main {
   border-radius: 4px;
 }
 
-.sort-control button {
+.layout-control {
+  display: inline-flex;
+  margin-left: 8px;
+}
+
+.layout-control button {
   font: inherit;
-  margin-left: 12px;
-  padding: 4px 10px;
-  color: var(--text-h);
+  padding: 4px 12px;
+  color: var(--text);
   background: var(--bg);
   border: 1px solid var(--border);
-  border-radius: 4px;
   cursor: pointer;
+  transition:
+    color 0.2s ease,
+    background 0.2s ease;
+}
+
+.layout-control button:first-child {
+  border-radius: 4px 0 0 4px;
+}
+
+.layout-control button:last-child {
+  border-radius: 0 4px 4px 0;
+  border-left: none;
+}
+
+.layout-control button.active {
+  color: var(--text-h);
+  background: var(--border);
 }
 
 .movie-list {

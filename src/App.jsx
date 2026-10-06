@@ -61,8 +61,8 @@ function App() {
   return (
     <main>
       <h1>Sci-Fi Movies</h1>
-      <div className="sort-control">
-        <label htmlFor="sort">Sort by </label>
+      <div className="controls">
+        <label htmlFor="sort">Sort by</label>
         <select
           id="sort"
           value={sortBy}
@@ -72,12 +72,24 @@ function App() {
           <option value="year">Release Date</option>
           <option value="title">Title (A-Z)</option>
         </select>
-        <button
-          type="button"
-          onClick={() => setLayout(layout === 'grid' ? 'list' : 'grid')}
-        >
-          {layout === 'grid' ? 'List view' : 'Grid view'}
-        </button>
+        <div className="layout-control">
+          <button
+            type="button"
+            className={layout === 'grid' ? 'active' : undefined}
+            aria-pressed={layout === 'grid'}
+            onClick={() => setLayout('grid')}
+          >
+            Grid
+          </button>
+          <button
+            type="button"
+            className={layout === 'list' ? 'active' : undefined}
+            aria-pressed={layout === 'list'}
+            onClick={() => setLayout('list')}
+          >
+            List
+          </button>
+        </div>
       </div>
       <ul className={layout === 'grid' ? 'movie-grid' : 'movie-list'}>
         {sortedMovies.map((movie) => (
