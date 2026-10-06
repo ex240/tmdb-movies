@@ -56,3 +56,17 @@ main {
   font-size: 13px;
   margin: auto 10px 10px;
 }
+
+.sort-control {
+  margin-bottom: 20px;
+  font-size: 14px;
+}
+
+.sort-control select {
+  font: inherit;
+  padding: 4px 8px;
+  color: var(--text-h);
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+}

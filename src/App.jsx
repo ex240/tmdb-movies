@@ -10,6 +10,7 @@ function App() {
   const [movies, setMovies] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
+  const [sortBy, setSortBy] = useState('rating')
 
   useEffect(() => {
     async function loadMovies() {
@@ -30,9 +31,15 @@ function App() {
     loadMovies()
   }, [])
 
-  const sortedMovies = [...movies].sort(
-    (a, b) => b.vote_average - a.vote_average,
-  )
+  const sortedMovies = [...movies].sort((a, b) => {
+    if (sortBy === 'year') {
+      return b.release_date.localeCompare(a.release_date)
+    }
+    if (sortBy === 'title') {
+      return a.title.localeCompare(b.title)
+    }
+    return b.vote_average - a.vote_average
+  })
 
   if (loading) {
     return (
@@ -53,6 +60,18 @@ function App() {
   return (
     <main>
       <h1>Sci-Fi Movies</h1>
+      <div className="sort-control">
+        <label htmlFor="sort">Sort by </label>
+        <select
+          id="sort"
+          value={sortBy}
+          onChange={(event) => setSortBy(event.target.value)}
+        >
+          <option value="rating">Rating</option>
+          <option value="year">Release Date</option>
+          <option value="title">Title (A-Z)</option>
+        </select>
+      </div>
       <ul className="movie-grid">
         {sortedMovies.map((movie) => (
           <li key={movie.id} className="movie-card">
