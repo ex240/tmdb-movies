@@ -34,17 +34,32 @@ filtering happens server-side and we only receive the 20 movies we intend to
 display. Hard-coding `878` inline would have been opaque, so it is named
 `SCI_FI_GENRE_ID`.
 
-**Sort — by rating, applied in JavaScript.**
+**Sort — applied in JavaScript, by rating by default.**
 TMDB offers a `sort_by` query parameter, but the movies are sorted client-side
-with `Array.prototype.sort()` on `vote_average`, descending:
+with `Array.prototype.sort()`, defaulting to `vote_average` descending:
 
 ```js
-const sortedMovies = [...movies].sort((a, b) => b.vote_average - a.vote_average)
+const sortedMovies = [...movies].sort((a, b) => {
+  if (sortBy === 'year') return b.release_date.localeCompare(a.release_date)
+  if (sortBy === 'title') return a.title.localeCompare(b.title)
+  return b.vote_average - a.vote_average
+})
 ```
 
-Sorting locally means a future sort control can reorder the grid instantly with
-no additional network request. The spread (`[...movies]`) copies the array first,
+Sorting locally means the sort control reorders the grid instantly with no
+additional network request. The spread (`[...movies]`) copies the array first,
 because `sort()` mutates in place and React state must not be modified directly.
+
+**Sort control.**
+A dropdown switches between rating, release date, and title. The active sort is
+held in state and the `<select>` is driven by it, so React state is the single
+source of truth for the control. The sorted list is derived during render rather
+than stored in its own state — changing the dropdown only re-renders, and the
+one network request stays in a mount-only effect.
+
+Release dates are compared with `localeCompare` rather than subtraction, since
+they arrive as strings. `YYYY-MM-DD` sorts alphabetically and chronologically
+alike, so no date parsing is needed.
 
 **Additional card properties — release year and rating.**
 `release_date` arrives as a full date string (`"2014-11-05"`), so only the year
